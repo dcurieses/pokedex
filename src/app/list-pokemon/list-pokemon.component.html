@@ -1,0 +1,173 @@
+<div class="title_container">
+  <img src="../assets/pokedex.png" class="pokedex_title" />
+</div>
+<div style="width:100%">
+  <mat-form-field class="search-nav">
+    <button mat-icon-button class="button-search" matPrefix>
+      <mat-icon>search</mat-icon>
+    </button>
+    <mat-label>Pokemon name</mat-label>
+    <input
+      type="text"
+      placeholder="Pokemon name"
+      aria-label="Name"
+      matInput
+      [formControl]="myControl"
+      [matAutocomplete]="auto"
+      id="inputName"
+      #inputName
+    />
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      <mat-option
+        *ngFor="let option of filteredOptions | async"
+        [value]="option"
+      >
+        {{ option }}
+      </mat-option> </mat-autocomplete
+    ><button
+      mat-icon-button
+      class="button-delete"
+      matSuffix
+      (click)="emptyFilter(); inputName.value = ''"
+      [disabled]="inputName.value == ''"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
+<div class="loading_container" *ngIf="loading">
+  <!---->
+  <img src="../../assets/loading.gif" class="img_loading" />
+  <h2 style="width:100%; text-align:center; margin:0">Loading Pokemons ...</h2>
+  <div style="width:60%; margin: 10px auto 50px auto; ">
+    <mat-progress-bar
+      mode="determinate"
+      value="{{ loaded_val }}"
+    ></mat-progress-bar>
+  </div>
+</div>
+<div class="general_container" *ngIf="!loading">
+  <ng-container *ngFor="let pokemon of filteredPokemons | async">
+    <div>
+      <div class="card" style="background-color: {{ pokemon.color }}">
+        <label class="poke_label"> #{{ pokemon.id }} </label>
+        <div class="type_label">
+          <img
+            src="../assets/types/{{ pokemon.tipo[0] }}.png"
+            width="20"
+            height="20"
+          />
+        </div>
+        <div class="card-content" style="text-align:center">
+          <button class="shiny_button">
+            <img
+              src="/assets/shiny.png"
+              width="20"
+              height="20"
+              (click)="changeImg(pokemon.nombre, pokemon.id)"
+              style="cursor:pointer"
+            />
+          </button>
+          <img
+            id="poke_{{ pokemon.nombre }}"
+            state="normal"
+            src="{{ pokemon.img }}"
+            width="150"
+            height="150"
+          />
+          <div class="container">
+            <h4 class="nombrePoke">
+              <b>{{ pokemon.nombre }}</b>
+            </h4>
+            <div style="font-size: 12px;">
+              <b>Types:</b>
+              <label *ngFor="let tipo of pokemon.tipo">
+                {{ tipo }}
+              </label>
+            </div>
+            <div style="font-size: 12px;margin-top:7px">
+              <b>Height:</b> {{ pokemon.altura }}m <b>Weight:</b>
+              {{ pokemon.peso }}Kg
+            </div>
+            <div class="stat_container">
+              <ng-container *ngFor="let stat of pokemon.stats">
+                <div
+                  style="width:33%; 
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;"
+                >
+                  <!--
+                  <label class="stat_label">
+                    {{ stat.name }}
+                    <br />
+                    {{ stat.base_stat }}
+                  </label>
+                -->
+                  <label class="stat_label">
+                    {{ stat.name }}
+                  </label>
+                  <label class="stat_value">
+                    {{ stat.base_stat }}
+                  </label>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+<!--
+<table>
+  <tbody>
+    <ng-container *ngFor="let pokemon of Pokemons; index as i">
+      <tr *ngIf="i % 3 == 0" style="width: 100%">
+        <td>
+          <div class="card">
+            <img
+              src="{{ pokemon.img }}"
+              width="200"
+              height="200"
+              style="width:100%"
+            />
+            <div class="container">
+              <h4><b>Jane Doe</b></h4>
+              <p>Interior Designer</p>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="card">
+            <img
+              src="{{ Pokemons[i + 1].img }}"
+              width="200"
+              height="200"
+              style="width:100%"
+            />
+            <div class="container">
+              <h4><b>Jane Doe</b></h4>
+              <p>Interior Designer</p>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="card">
+            <img
+              src="{{ Pokemons[i + 2].img }}"
+              width="200"
+              height="200"
+              style="width:100%"
+            />
+            <div class="container">
+              <h4><b>Jane Doe</b></h4>
+              <p>Interior Designer</p>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-container>
+  </tbody>
+</table>
+-->
